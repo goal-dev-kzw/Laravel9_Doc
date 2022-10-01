@@ -32,4 +32,5 @@
 	</script>
 
 <br>
-> `toastr.info()` `toastr.error()` `toastr.success()` `toastr.warning()`  ဆိုပြီးရှိပါတယ်။
+
+> `toastr.info()` `toastr.error()`	`toastr.success` `toastr.warning`  ဆိုပြီးရှိပါတယ်။
