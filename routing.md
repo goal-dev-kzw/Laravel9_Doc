@@ -3,9 +3,15 @@
 Routing ကိုအလွယ်ပြောရရင် လမ်းကြောင်းဆွဲခြင်းဖြစ်ပါတယ်။ ဘယ်လမ်းကိုသွားရင် သတ်မှတ်ပေးတဲ့သဘောပါ။ ဘယ် URL Address ကိုသွားရင် ဘာအလုပ်လုပ်ရမယ်ဆိုတာကို သတ်မှတ်ပေးခြင်းဖြစ်ပါတယ်။
 
 - Basic Routing
-	- Redirecting Routes
-	- View Routes 
-	- Route List
+	- [Returning Text](#returning-text)
+	- [Returning JSON](#returning-json)
+	- [Routing With Controller](#routing-with-controller)
+	-  [Available Router Methods](#available-router-methods)
+	-  [Getting Current HTTP Request From Route](#getting-current-http-request)
+	- [Dynamic Routes   (Route Parameters)](#dynamic-routes---route-parameters)
+	- [Optional Route Parameter](#optional-route-parameter)
+	- [Defining Route Name](#defining-route-name)
+	- [Redirect Routes](#redirect-routes)
 <br><br>
 
 ####  Returning Text
@@ -81,17 +87,7 @@ Route::get('/users', function (Request $request) {
 
 <br>
 
-#### CSRF Protection
-`POST`, `PUT`, `PATCH`, or `DELETE` routes that are defined in the `web` routes file should include a CSRF token field. Otherwise, the request will be rejected.
 
-```
-<form method="POST" action="/profile">
-    @csrf
-    ...
-</form>
-```
-***
-<br>
 
 #### Dynamic Routes   (Route Parameters)
 Route လို့ပြောရင် Static Route နဲ့ Dynamic Route ဆိုပြီး 2 မျိုးရှိပါတယ်။ Static Route က ပုံသေသတ်မှတ်ထားတဲ့ Route လမ်းကြောင်းပါ။ Dynamic Route ကတော့ပါလာတဲ့ Route Parameter အပေါ်မူတည်ပြီး ပြောင်းလဲနိုင်တဲ့ Route လမ်းကြောင်းဘဲဖြစ်ပါတယ်။
@@ -103,6 +99,29 @@ Route::get('/articles/detail/{$id}',function($id){
 ```
 Note:: PHP မှာ String အတွင်း Variable တွေ ထည့်သွင်းအသုံးပြုလိုရင်  `Double Quote` ကိုအသုံးပြုရပါတယ်။ Single Quote အတွင်းမှာတော့ Variable ရေးလဲ အလုပ်မလုပ်ပါဘူး။
 ***
+<br>
+
+#### Optional Route Parameter
+```
+Route::get('/user/{name?}',function($name='John'){ 
+	return  $name; 
+});
+```
+
+***
+
+<br>
+
+
+#### Defining Route Name
+```
+Route::get('/article',function(){ 
+	return  'I show Article Detail'; 
+})->name('article.detail.show');
+```
+
+***
+
 <br>
 
 #### Redirect Routes
@@ -127,4 +146,23 @@ Or, you may use the  `Route::permanentRedirect`  method to return a  `301`  stat
 ```
 Route::permanentRedirect('/here', '/there');
 ```
+
+Redirecting With Route Path
+
+    Route::get('/article/show',function(){ 
+	    return redirect('/article'); 
+	 });
+
+Redirecting With Route Name
+
+    Route::get('/article/show',function(){
+	   return redirect()->route('article.detail.show'); 
+	});
+
+
+
 ***
+<br>
+
+
+
