@@ -1,4 +1,6 @@
 ### <u>Toastr In Laravel</u>
+<br>
+
 ![enter image description here](https://websolutionstuff.com/adminTheme/assets/img/toastr_notifications_example_in_laravel_8.png)
 #### <u>1. Link With JS</u>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
