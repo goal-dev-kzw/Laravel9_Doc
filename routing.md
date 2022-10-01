@@ -2,17 +2,18 @@
 
 Routing ကိုအလွယ်ပြောရရင် လမ်းကြောင်းဆွဲခြင်းဖြစ်ပါတယ်။ ဘယ်လမ်းကိုသွားရင် ဘယ်ရောက်မယ်ဆိုတာ သတ်မှတ်ပေးတဲ့သဘောပါ။ ဘယ် URL Address ကိုသွားရင် ဘာအလုပ်လုပ်ရမယ်ဆိုတာကို သတ်မှတ်ပေးခြင်းဖြစ်ပါတယ်။
 
-- Basic Routing
-	- [Returning Text](#returning-text)
-	- [Returning JSON](#returning-json)
-	- [Routing With Controller](#routing-with-controller)
-	-  [Available Router Methods](#available-router-methods)
-	-  [Getting Current HTTP Request From Route](#getting-current-http-request)
-	- [Dynamic Routes   (Route Parameters)](#dynamic-routes---route-parameters)
-	- [Optional Route Parameter](#optional-route-parameter)
-	- [Defining Route Name](#defining-route-name)
-	- [Redirect Routes](#redirect-routes)
-	- [Generating URLs To Named Routes](#generating-urls-to-named-routes)
+- [Returning Text](#returning-text)
+- [Returning JSON](#returning-json)
+- [Routing With Controller](#routing-with-controller)
+-  [Available Router Methods](#available-router-methods)
+-  [Getting Current HTTP Request From Route](#getting-current-http-request)
+- [Dynamic Routes   (Route Parameters)](#dynamic-routes---route-parameters)
+- [Optional Route Parameter](#optional-route-parameter)
+- [Defining Route Name](#defining-route-name)
+- [Redirect Routes](#redirect-routes)
+- [Generating URLs To Named Routes](#generating-urls-to-named-routes)
+- [Route Groups](#route-groups)
+- [Route Lists](#the-route-list)
 <br><br>
 
 ####  Returning Text
@@ -37,6 +38,58 @@ Routing ကိုအလွယ်ပြောရရင် လမ်းကြေ�
 	    return ["name"=>"Josh","age"=>24]; 
     });
 
+
+	output =>
+    {
+	  "name": "Josh",
+	  "age": 24
+	}
+```
+Route::get('/person/info',function(){
+	return [
+		["name"=>"Josh","age"=>24],
+		["name"=>"Bob","age"=>19],
+		["name"=>"Diana","age"=>27]
+	];
+});
+
+
+output =>
+[
+  {
+    "name": "Josh",
+    "age": 24
+  },
+  {
+    "name": "Bob",
+    "age": 19
+  },
+  {
+    "name": "Diana",
+    "age": 27
+  }
+]
+
+```
+***
+<br>
+
+####  Returning View
+
+#####  <u> return view with  get() method </u>
+
+    Route::get('/welcome', function(){
+	    return view('welcome');
+    });
+#####  <u> view() method </u>
+
+    Route::view('/welcome', 'welcome');
+    
+   
+
+> `resources/views/welcome.blade.php `  ကို return ပြန်ပေးပါတယ်။
+> resources/views/greeting/welcome.blade.php ဆိုပြီး subfolder ထဲမှာရှိနေရင်
+> `return view('greeting.welcome');`  or `return view('greeting/welcome');`
 ***
 <br>
 
@@ -147,19 +200,26 @@ Or, you may use the  `Route::permanentRedirect`  method to return a  `301`  stat
 ```
 Route::permanentRedirect('/here', '/there');
 ```
+<br>
 
-Redirecting With Route Path
+##### <u>Redirecting With Route Path</u>
 
     Route::get('/article/show',function(){ 
 	    return redirect('/article'); 
 	 });
+<br>
 
-Redirecting With Route Name
+##### <u>Redirecting With Route Name</u>
 
     Route::get('/article/show',function(){
 	   return redirect()->route('article.detail.show'); 
 	});
 
+##### <u>Redirecting With Route Parameter</u>
+
+    Route::get('/articles/custom',function(){
+	    return redirect()->route('profile', ['name' => 'john']);
+	});
 
 
 ***
@@ -212,6 +272,56 @@ $url  =  route('profile',  ['id'  =>  1,  'photos'  =>  'yes']);
 ```
 
 ***
+<br>
+
+
+#### Route Groups
+##### <u>Middleware Group</u>
+```
+Route::middleware(['first', 'second'])->group(function  () {
+	Route::get('/', function  () {
+		// Uses first & second middleware...
+	});
+
+	Route::get('/user/profile', function  () {
+	// Uses first & second middleware...
+	});
+});
+```
+<br>
+
+#####   <u>Controller Group</u>
+
+```
+use App\Http\Controllers\OrderController;
+
+Route::controller(OrderController::class)->group(function  () {
+	Route::get('/orders/{id}', 'show');
+	Route::post('/orders', 'store');
+});
+```
+<br>
+
+#####   <u>Route URL Prefix & Name Prefix In Route Group</u>
+```
+Route::prefix('admin')->name('admin.')->group(function  () {
+	Route::get('/users', function  () {
+		// Matches The "/admin/users" URL
+	});
+	
+	Route::get('/articles', function  () {
+		// Route assigned name "admin.articles"...
+	})->name('articles');
+});
+```
+
+***
 
 <br>
 
+#### The Route List
+
+The  `route:list`  Artisan command can easily provide an overview of all of the routes that are defined by your application:
+
+
+    php artisan  route:list
