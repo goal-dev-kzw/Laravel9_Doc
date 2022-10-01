@@ -1,5 +1,5 @@
-## <u>Toastr In Laravel</u>
-
+### <u>Toastr In Laravel</u>
+![enter image description here](https://websolutionstuff.com/adminTheme/assets/img/toastr_notifications_example_in_laravel_8.png)
 #### <u>1. Link With JS</u>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -17,6 +17,7 @@
 #### <u>3.  In JS</u>
 	<script>
 	    toastr.options.progressBar  =  true;
+	    toastr.options.closeButton  =  true;
 		toastr.options.showEasing  =  'easeOutBounce';
 		toastr.options.hideEasing  =  'easeInBack';
 		toastr.options.closeEasing  =  'easeInBack';
@@ -30,7 +31,7 @@
 			@endif
 		});
 	</script>
-
+	
 <br>
 
-> `toastr.info()` `toastr.error()` `toastr.success()` `toastr.warning()`  ဆိုပြီးရှိပါတယ်။
+> `toastr.info()` `toastr.error()`	`toastr.success()` `toastr.warning()`  ဆိုပြီးရှိပါတယ်။
