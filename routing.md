@@ -4,6 +4,7 @@ Routing ကိုအလွယ်ပြောရရင် လမ်းကြေ�
 
 - [Returning Text](#returning-text)
 - [Returning JSON](#returning-json)
+- [Returning View](#returning-view)
 - [Routing With Controller](#routing-with-controller)
 -  [Available Router Methods](#available-router-methods)
 -  [Getting Current HTTP Request From Route](#getting-current-http-request)
