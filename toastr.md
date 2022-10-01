@@ -1,4 +1,4 @@
-### <u>Toastr In Laravel</u>
+## <u>Toastr In Laravel</u>
 
 #### <u>1. Link With JS</u>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -30,3 +30,5 @@
 			@endif
 		});
 	</script>
+
+> `toastr.info()` `toastr.error()`	`toastr.success` `toastr.warning`  ဆိုပြီးရှိပါတယ်။
