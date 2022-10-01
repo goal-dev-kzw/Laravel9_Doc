@@ -1,6 +1,6 @@
 ## Routing
 
-Routing ကိုအလွယ်ပြောရရင် လမ်းကြောင်းဆွဲခြင်းဖြစ်ပါတယ်။ ဘယ် URL Address ကိုသွားရင် ဘာအလုပ်လုပ်ရမယ်ဆိုတာကို သတ်မှတ်ပေးခြင်းဖြစ်ပါတယ်။
+Routing ကိုအလွယ်ပြောရရင် လမ်းကြောင်းဆွဲခြင်းဖြစ်ပါတယ်။ ဘယ်လမ်းကိုသွားရင် သတ်မှတ်ပေးတဲ့သဘောပါ။ ဘယ် URL Address ကိုသွားရင် ဘာအလုပ်လုပ်ရမယ်ဆိုတာကို သတ်မှတ်ပေးခြင်းဖြစ်ပါတယ်။
 
 - Basic Routing
 	- [Returning Text](#returning-text)
@@ -12,6 +12,7 @@ Routing ကိုအလွယ်ပြောရရင် လမ်းကြေ�
 	- [Optional Route Parameter](#optional-route-parameter)
 	- [Defining Route Name](#defining-route-name)
 	- [Redirect Routes](#redirect-routes)
+	- [Generating URLs To Named Routes](#generating-urls-to-named-routes)
 <br><br>
 
 ####  Returning Text
@@ -164,5 +165,53 @@ Redirecting With Route Name
 ***
 <br>
 
+####  Generating URLs To Named Routes
 
+route() method က သတ်မှတ်ပေးထားခဲ့တဲ့ route name တွေကို url အဖြစ်ပြောင်းလဲပေးတဲ့ method ဖြစ်ပါတယ်။
+
+Generating Url
+```
+Route::get('/user/show', function  ($id) {
+	//
+})->name('user');
+
+$url  =  route('user');    // $url=> /user/show
+```
+<br>
+
+Generating Redirects
+```
+return  redirect()->route('profile');
+
+return  to_route('profile');
+```
+
+<br>
+
+Giving Route Parameters Using route()
+```
+Route::get('/user/{id}/profile', function  ($id) {
+	
+})->name('profile');
+
+$url  =  route('profile',  ['id'  =>  1]);
+
+// /user/1/profile
+```
+<br>
+
+If you pass additional parameters in the array, those key / value pairs will automatically be added to the generated URL's query string:
+```
+Route::get('/user/{id}/profile', function  ($id) {
+
+})->name('profile');
+
+$url  =  route('profile',  ['id'  =>  1,  'photos'  =>  'yes']);
+
+// /user/1/profile?photos=yes
+```
+
+***
+
+<br>
 
