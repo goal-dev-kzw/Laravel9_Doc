@@ -115,3 +115,5 @@ toast('Question Toast','question');
 ```
 toast('Error Toast','error');
 ```
+
+### [Go To Official Documentation](https://realrashid.github.io/sweet-alert/demo)
