@@ -13,3 +13,6 @@
 	Route::get('/greeting', function () {
     return 'Hello World';
 	});
+
+
+နေကောင်းလားလို့မေးနေတယ်။
