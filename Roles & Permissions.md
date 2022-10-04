@@ -249,8 +249,8 @@ namespace  App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
-**use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;**
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 
 class  PermissionController  extends  Controller
