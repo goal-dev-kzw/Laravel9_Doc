@@ -11,7 +11,7 @@
 
 <br>
 
-#### User.php
+#### [User.php](#userphp)
 
 	class  User  extends  Authenticatable
 	{
@@ -19,7 +19,7 @@
 	}
 <br>
 
-#### Kernel.php
+#### [Kernel.php](#kernelphp)
 
 	protected  $routeMiddleware  = [
 		………
@@ -37,7 +37,7 @@
 	php artisan make:seeder AdminSeeder
 <br>
 		
-#### AdminSeeder.php
+#### [AdminSeeder.php](#adminseederphp)
 
 	
 	use App\Models\User;
@@ -55,7 +55,7 @@
 	}
 <br>
 		
-#### RoleSeeder.php
+#### [RoleSeeder.php](#roleseederphp)
 
 	use Spatie\Permission\Models\Role;
 	
@@ -68,7 +68,7 @@
 
 <br>
 
-####  DatabaseSeeder.php
+####  [DatabaseSeeder.php](#databaseseederphp)
 
 
 	public  function  run()
@@ -79,7 +79,7 @@
 
 <br>
 
-####  web.php
+####  [web.php](#webphp)
 
 	Route::get('/admin',function(){
 		return  view('admin.index');
@@ -87,7 +87,7 @@
 
 <br>
 
-#### Check role in the blade template (admin/index.blade.php)
+#### [Check role in the blade template (admin/index.blade.php)](#check-role-in-the-blade-template-adminindexbladephp)
 	
 	@role('admin')
 		<a  class="dropdown-item text-success"
@@ -115,7 +115,7 @@
 <br>
 
 
-#### web.php   (// delete the previous route)
+#### [web.php](#webphp----delete-the-previous-route)   (// delete the previous route)
 
 
   
@@ -139,7 +139,7 @@
 
 <br>
 
-#### AdminController.php
+#### [AdminController.php](#admin-controller)
 
 	class  AdminController  extends  Controller
 	{
@@ -149,7 +149,7 @@
 	}
 <br>
 
-#### RoleController.php
+#### [RoleController.php](#role-controller)
 
 	<?php
 	namespace  App\Http\Controllers\Admin;
@@ -241,7 +241,7 @@
 
 <br>
 
-#### Permission Controller
+#### [Permission Controller](#permission-controller)
 
 ```
 <?php
