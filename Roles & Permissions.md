@@ -238,3 +238,91 @@
 		}
 
 	}
+
+<br>
+
+#### Permission Controller
+
+```
+<?php
+namespace  App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+**use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;**
+
+
+class  PermissionController  extends  Controller
+{
+
+	public  function  index()
+	{
+		$permissions  =  Permission::all();
+		return  view('admin.permissions.index',compact('permissions'))->with('no', 1);
+	}
+
+  
+	public  function  create()
+	{
+		return  view('admin.permissions.create');
+	}
+
+  
+	public  function  store(Request  $request)
+	{
+		$request->validate(['permission'=> 'required|min:3']);
+		Permission::create([
+			'name' => $request->permission,
+		]);
+		return  to_route('admin.permissions.index')->with('status',"$request->permission has successfully created");
+	}
+
+  
+	public  function  edit(Permission  $permission)
+	{
+		$roles  =  Role::all();
+		return  view('admin.permissions.edit',compact('permission','roles'));
+	}
+
+
+	public  function  update(Request  $request,Permission  $permission)
+	{
+		$request->validate(['permission'=> 'required|min:3']);
+		$permission->update([
+			'name' => $request->permission,
+		]);
+		return  to_route('admin.permissions.index')->with('status',"$request->permission has successfully updated");
+	}
+
+  
+	public  function  destroy(Permission  $permission)
+	{
+		$permission->delete();
+		return  to_route('admin.permissions.index')->with('status',"$permission->id Deleted Successfully");
+	}
+
+  
+	public  function  assignRole(Request  $request,Permission  $permission)
+	{
+		if($permission->hasRole($request->role)){
+			Alert::warning('Role Exists', "$request->role has been already exists!");
+			return  back();
+		}
+		$permission->assignRole($request->role);
+		Alert::success('Role Added Successfully', "'$request->role' added");
+		return  back();
+	}
+
+  
+	public  function  removeRole(Permission  $permission,Role  $role)
+	{
+		if($permission->hasRole($role)){
+			$permission->removeRole($role);
+			Alert::success('Remove Role',"The permission '$role->name' has been removed from $permission->name");
+			return  back();
+		}
+	}
+	
+}
+```
