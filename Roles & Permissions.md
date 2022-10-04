@@ -425,9 +425,9 @@ class  UserController  extends  Controller
 * views
 	* admin
 		 * layouts
-			* index.blade.php   			 --------(master template for admin dashboard)
+			* <mark>index.blade.php</mark>   			 --------(master template for admin dashboard)
 		* roles
-			* index.blade.php
+			*  index.blade.php
 			* edit.blade.php
 			* create.blade.php
 		* permissions 
