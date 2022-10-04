@@ -437,3 +437,53 @@ class  UserController  extends  Controller
 		* users 
 			* index.blade.php
 			* row.blade.php
+
+
+<br>
+
+#### roles.index.blade.php
+
+
+```
+@extends('admin.layouts.app')
+<div>
+
+	<a  href="{{  route('admin.roles.create')  }}"  class="neu btn text-dark ml-4 mb-4 btn-outline-primary"> <i  class="fa fa-plus mr-1 "></i>Create Role</a>
+	
+	<div  class="mx-auto text-center ">
+
+		<table  class="table table-md neu mx-auto text-center">
+			<thead>
+				<tr>
+					<th  scope="col">ID</th>
+					<th  scope="col">Name</th>
+					<th  scope="col">Actions</th>
+				</tr>
+
+			</thead>
+
+			<tbody>
+				@foreach ($roles  as  $role)
+				<tr>
+					<th>{{  $no++ }}</th>
+					<td>{{  $role->name  }}</td>
+					<td  class="d-flex justify-content-center ">
+					<a  href="{{  route('admin.roles.edit',$role->id)  }}"  class="btn btn-success mr-4 btn-neu">
+					<i  class="fa fa-pencil-square-o mr-1"></i> Edit</a>
+					
+					<form  id="delete_from_{{$role->id}}"  method="POST"  action="{{  route('admin.roles.destroy',$role->id)  }}" >
+						@csrf
+						@method('DELETE')
+						<a  href="javascript:void(0);"  data-id="{{$role->id}}"  class="_delete_data btn btn-danger btn-neu">
+							<i  class="fa fa-trash-o mr-1 "></i> Delete
+						</a>
+					</form>
+					</td>
+				</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</div>
+</div>
+@endsection
+```
