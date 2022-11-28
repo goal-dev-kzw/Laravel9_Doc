@@ -133,3 +133,181 @@ function နဲ့ return ပြန်ပေးဖို့လိုလာပါ
 
 ![image](https://github.com/goal-dev-kzw/Laravel9_Doc/blob/main/Screenshot%20%28103%29.png)
 
+
+    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.$row->id.'" class=" btn btn-outline-info text-center viewRoom py-2 mr-4"> <i class="mdi mdi-eye mx-auto "></i></a>';
+
+row တစ်ခုချင်းစီရဲ့ id ကို  data-id ဆိုတဲ့ attribute နဲ့ Button 3 ခု လုံးမှာထည့်ပေးထားတယ်။ id ပါမှ edit , delete အလုပ်တွေကို လုပ်နိုင်မှာဖြစ်တာကြောင့် Button မှာ တစ်ခါထဲ ထည့်ပေးထားခြင်းဖြစ်ပါတယ်။
+
+
+     addColumn('action', function($row){
+    	    $btn  =  '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.$row->id.'" class=" btn btn-outline-info text-center viewRoom py-2 mr-4"> <i class="mdi mdi-eye mx-auto "></i></a>';
+    	    $btn  =  $btn.  '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.$row->id.'" class="edit btn btn-outline-success editRoom py-2 mr-4"> <i class="mdi mdi-pencil-box-outline mr-1"></i>Edit</a>'; 
+    	    $btn  =  $btn.' <a href="javascript:void(0)"  data-toggle="tooltip" data-id="'.$row->id.'"  class="btn btn-outline-danger deleteRoom py-2 mr-4" ><i class="mdi mdi-delete mr-1 "></i>Delete</a>'; 
+    	    return  $btn;
+        })
+
+
+Button 3 ခု ကို String အဖြစ်နဲ့ variable ထဲမှာ သိမ်းပြီး return ပြန်ပေးထားပါတယ်။ return ပြန်ထားတဲ့ Button 3 ခုကို actions column ထဲမှာ ထည့်ပေးမှာဖြစ်ပါတယ်။
+
+	->rawColumns(['action'])
+rawColumns() က HTML content တွေကို table ရဲ့ column ထဲမှာ ပြပေးနိုင်ဖို့သုံးတယ်လို့ အပေါ်မှာပြောခဲ့ပါတယ်။  
+
+အခု actions column ဟာလဲ Button 3 ခုက  HTML Content တွေပဲဖြစ်ပါတယ်။ rawColumns() ထဲမှာသာ မကြေညာဘူးဆို String အနေနဲ့ပဲပြပေးမှာပါ။ HTML Button ဖြစ်မှာမဟုတ်ပါဘူး ဒါကြောင့် actions ကို rawColumns() အဖြစ်သုံးမယ် ပြောပေးရတာဖြစ်ပါတယ်။ 
+
+	->make(true);
+ကတော့  datatable make လုပ်မယ် လို့ ပြောလိုက်တာပါ။
+
+    return view('backend.pages.rooms.index');
+
+နောက်ဆုံးမှာ datatable ကို blade ဆီ return ပြန်ပေးထားပါတယ်။
+<br>
+___
+
+### jquery setup from blade template
+
+အခုဆက်ပြီး blade template မှာ datatable အတွက် jquery သုံးပြီး setup လုပ်ပါမယ်။
+
+<u> In backend/pages/rooms/index.blade.php</u>
+
+    @extends('backend.layouts.app')
+    @section('content')        
+    <div  class="card p-3"  style="overflow-x:auto;">  
+	    <table  class="table data-table text-white" >    
+		    <thead>    
+			    <tr>    
+				    <th>No</th>    
+				    <th>Room</th>    
+				    <th>Type</th>    
+				    <th>Description</th>    
+				    <th>Price</th>    
+				    <th>Status</th>    
+				    <th>Living</th>     
+				    <th  width="280px">Action</th>  
+			    </tr>  
+		    </thead>  
+		    <tbody>    
+		    </tbody>    
+	    </table>   
+    </div>
+    @endsection
+
+table heading `<th>` တွေပဲ ပေးပြီး table body `<tbody>` ကို တော့ အလွတ်ထားထားပါတယ်။ jquery ajax သုံးပြီး  `<tbody>` ထဲမှာ rows တွေထည့်သွင်းသွားမှာဖြစ်ပါတယ်။
+
+***
+
+<u> In backend/pages/rooms/index.blade.php</u>
+
+	@pushOnce('js')
+	<script>
+		$(function () {
+		
+		});
+	</script>
+	@endPushOnce
+
+
+ဒီ code လေးက jquery code ပါ။ document or website ကြီး တစ်ခုလုံး loading လုပ်ပြီးနောက် ready ဖြစ်ရင် အလုပ်လုပ်မယ်ဆိုတဲ့  function ပါ။
+ဒီ function ထဲမှာ ရေးသမျှ code က website loading လုပ်ပြီးတာနဲ့ တန်းအလုပ်လုပ်မှာပါ။
+
+
+	@pushOnce('js')
+	<script>
+		$(function () {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+		});
+	</script>
+	@endPushOnce
+
+ခုနက document ready ဖြစ်ရင် အလုပ်လုပ်မယ်ဆိုတဲ့ Function ထဲမှာ ajaxSetup() ဆိုတဲ့ method လေးတစ်ခုရေးလိုက်ပါတယ်။
+
+    headers: {
+    	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+
+ဒီ code လေးက http header ကို setup လုပ်ပေးထားတာပါ။
+ajax ရဲ့ သဘောက website ကို loading မဖြစ်စေပဲ နောက်ကွယ်ကနေ url request တစ်ခုပို့ပေးတာဖြစ်ပါတယ်။
+
+get request ဆိုပြဿနာမရှိပေမယ့် အခြား post,delete တို့လို method တွေပို့တဲ့အခါ laravel မှာ csrf ဆိုတဲ့ token လေးတစ်ခုလိုအပ်ပါတယ်။ ဒါကြောင့် ajax သုံးတဲ့အခါ မှာလဲ csrf ကို အသုံးပြုဖို့လိုလာပါတယ်။ laravel မှာ @csrf ဆိုပြီးသုံးပေမယ့် ajax မှာတော့ http header ထဲမှာပဲ အပေါ်က code အတိုင်း csrf token ကို ထည့်ပေးလိုက်ခြင်းဖြစ်ပါတယ်။
+
+	@pushOnce('js')
+	<script>
+		$(function () {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			/*------------------------------------------
+
+			--------------------------------------------
+
+			Render DataTable
+
+			--------------------------------------------
+
+			--------------------------------------------*/
+
+
+
+			let  room_table  =  $('.data-table').DataTable({
+				processing: true,
+				serverSide: true,
+				retrieve: true,
+				ajax: {
+				url: "{{ route('rooms.index') }}",
+				},
+				columns: [
+					{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+					{data: 'room_no', name: 'room_no'},
+					{data: 'type', name: 'type',},
+					{data: 'description', name: 'description',},
+					{data: 'price', name: 'price'},			
+					{data: 'status', name: 'status',},
+					{data: 'is_living', name: 'is_living',},
+					{data: 'action', name: 'action', orderable: false, searchable: false},
+				],
+			});
+		});
+	</script>
+	@endPushOnce
+
+<br>
+
+    let  room_table  =  $('.data-table').DataTable({
+
+.data-table လို့ပေးထားတဲ့ class ရှိတဲ့ table ကို  datatable အဖြစ်အသုံးပြုမယ်လို့ကြေညာလိုက်ပါတယ်။
+
+    processing: true,
+    serverSide: true,
+	retrieve: true,
+    
+   processing:true ပေးရတာက loading လေးပြပေးအောင်လို့ဖြစ်ပါတယ်။
+serverSide: true,
+retrieve: true,
+sql လို serverside မျိုးကနေ data ကို ရယူမှာဖြစ်တာကြောင့် ပေးရတာဖြစ်ပါတယ်။
+
+    ajax: { url: "{{ route('rooms.index') }}", },
+
+room.index ဆိုတာက route name ပါ။ RoomController ထဲက index method ကို လှမ်းခေါ်ပေးတဲ့ route name ဖြစ်ပါတယ်။ controller ကို 
+Route::resource() နဲ့ register လုပ်တုန်းက သူ့ဘာသာဖန်တီးပေးထားတဲ့ route name ဖြစ်ပါတယ်။
+
+ajax နဲ့ RoomController ရဲ့ index method ကို ခေါ်တဲ့ route ကို 
+request ပို့မယ်ပြောလိုက်တာဖြစ်ပါတယ်။
+
+	columns: [
+		{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+		{data: 'room_no', name: 'room_no',},
+		{data: 'type', name: 'type',},
+		{data: 'description', name: 'description',},
+		{data: 'price', name: 'price'},
+		{data: 'status', name: 'status',},
+		{data: 'is_living', name: 'is_living',},
+		{data: 'action', name: 'action', orderable: false, searchable: false},
+	],
+
+ဒီ code လေးက ခုနက request လုပ်လိုက်လို့ index method ကနေ return ပြန်လာတဲ့ data column တွေကို table ထဲမှာ ထည့်ပေးလိုက်တာဖြစ်ပါတယ်။
