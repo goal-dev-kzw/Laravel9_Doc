@@ -491,6 +491,3 @@ order number 6 column ဖြစ်တဲ့ Living Column ကို `visible:fal
 ဒီအထိ ရေးပြီးသွားရင် table က အပေါ်ကလိုပြပေးနေမှာပါ။
 
 
-image
-
-အခု action column မှာပဲ button တစ်ခု ထပ်ထည့်ပါမယ်။ နဂိုမူလက action မှာ button 3 ခုရှိပြီးသားပါ။ အခု အောက်ပါပုံအတိုင်း Button 4 ခုဖြစ်အောင် ရေးပါမယ်။
