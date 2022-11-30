@@ -314,6 +314,7 @@ request ပို့မယ်ပြောလိုက်တာဖြစ်ပါ
 ___
 
 အပေါ်က code အထိ ရေးပြီးသွားပြီဆိုရင် အခုလို table ရလာမှာဖြစ်ပါတယ်။
+
 ![image](https://github.com/goal-dev-kzw/Laravel9_Doc/blob/main/Screenshot%20(105).png)
 
 အခု Column တွေကို ဆက်ပြင်ကြပါမယ်။ ပထမဆုံး description column ကိုကြည့်ပါ။ စာပိုဒ်ကြီးတစ်ခုလုံးကို table ထဲမှာ ဖော်ပြနေတော့ ကြည့်ရဆိုးစေပါတယ်။ column တွေကို ပြုပြင် (customize) လုပ်ဖို့အတွက် `columnDefs: [  ]` property ကို သုံးပေးရမှာဖြစ်ပါတယ်။
