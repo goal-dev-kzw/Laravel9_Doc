@@ -311,3 +311,185 @@ request ပို့မယ်ပြောလိုက်တာဖြစ်ပါ
 	],
 
 ဒီ code လေးက ခုနက request လုပ်လိုက်လို့ index method ကနေ return ပြန်လာတဲ့ data column တွေကို table ထဲမှာ ထည့်ပေးလိုက်တာဖြစ်ပါတယ်။
+___
+
+အပေါ်က code အထိ ရေးပြီးသွားပြီဆိုရင် အခုလို table ရလာမှာဖြစ်ပါတယ်။
+![image](https://github.com/goal-dev-kzw/Laravel9_Doc/blob/main/Screenshot%20(105).png)
+
+အခု Column တွေကို ဆက်ပြင်ကြပါမယ်။ ပထမဆုံး description column ကိုကြည့်ပါ။ စာပိုဒ်ကြီးတစ်ခုလုံးကို table ထဲမှာ ဖော်ပြနေတော့ ကြည့်ရဆိုးစေပါတယ်။ column တွေကို ပြုပြင် (customize) လုပ်ဖို့အတွက် `columnDefs: [  ]` property ကို သုံးပေးရမှာဖြစ်ပါတယ်။
+
+	let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+
+					]
+				});
+			});
+
+ columnDefs: [  ] မှာ column တွေကို ပြုပြင်မယ့် object { }  လေးတွေပေးရပါတယ်။  အဲ့ဒီ object ထဲမှာ `target` ဆိုတဲ့ property ရယ် `render` ဆိုတဲ့ method ရယ် လိုပါတယ်။
+
+
+	let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+						{
+							targets:3, 		// the order of column 
+							render:function(data,type,row){
+								return  data.length  >  20  ?
+								data.substr(0,17) +  '....'  :  data
+							}
+						},
+					]
+				});
+			});
+`target` ဆိုတာက ကိုယ်ပြင်ချင်တဲ့ column ရဲ့ order ပါ။  description column က ၃ ခုမြောက် column ဖြစ်ပါတယ်။ "No" Column ကို ထည့်မရေတွက်ပါဘူး။ သူက db ထဲက ဆွဲထုတ်ထားတဲ့ data column မဟုတ်လို့ပါ။
+
+`render()` method မှာတော့ target ပေးထားတဲ့ column ကို ဘယ်လိုပြုပြင်ချင်လဲ သတ်မှတ်ပေးရပါမယ်။ `data ,type , row` ဆိုပြီး 
+parameter 3 ခုနဲ့ လက်ခံထားပါတယ်။ 
+
+
+
+	render:function(data,type,row){
+		 return data.length > 20 ?
+				  data.substr(0,17) + '....' : data
+	   }
+
+`data` ဆိုတာက column ရဲ့ data ပါ။ ဥပမာ target : 3 ဆိုရင် column 3 ဖြစ်တဲ့ description column ရဲ့ data ကို ဒီ parameter က ဖမ်းပေးတာပါ။ `row` ဆိုတာကတော့ data row တစ်ခုချင်းစီကို ဆိုလိုပါတယ်။
+
+ အပေါ်က code ရဲ့ အလုပ်လုပ်ပုံကိုရှင်းပါမယ်။ `description` column ထဲကို ဝင်လာတဲ့ data ရဲ့ length က 20 ထက် ကျော်မယ်ဆိုရင် ( description က  အလုံး ၂၀ ထက်ကျော်နေမယ်ဆိုရင်) 17 လုံးပဲပြပြီး `....` ပေါင်းပြီးပြမယ်။ `....` ဆိုတာကတော့ ပြရန် ကျန်သေးတယ် ဆိုတဲ့သဘောပါ။
+ 
+အပေါ်က code ထည့်သွင်းပြီးရင် table က အခုလိုဖြစ်သွားမှာပါ။
+
+![image](https://github.com/goal-dev-kzw/Laravel9_Doc/blob/main/Screenshot%20(107).png)
+
+အခု နောက် column ဆက်ပြင်ပါမယ်။ Living Column နဲ့  Status Column တို့ကို ပြင်ပါမယ်။ Living Column ကို table မှာမပေါ်စေချင်ပါဘူး။ Status Column မှာပဲ Living ရဲ့ boolean နဲ့  Status ရဲ့ boolean ကိုပဲပေါင်းပြီး
+`Living`  `Booked`  `Available` ဆိုတဲ့ Status 3ခုကိုပြပေးမှာဖြစ်ပါတယ်။ အရင်ဆုံး Living Column ကို table မှာ မပြအောင်လုပ်ကြပါမယ်။
+
+	let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+						{
+							targets:3, 		// the order of column 
+							render:function(data,type,row){
+								return  data.length  >  20  ?
+								data.substr(0,17) +  '....'  :  data
+							}
+						},
+						{
+							target: 6,
+							visible: false,
+						},
+					]
+				});
+			});
+
+order number 6 column ဖြစ်တဲ့ Living Column ကို `visible:false` လို့ပေးပြီး hide လုပ်လိုက်ပါမယ်။ 
+
+အခု `Status` Column မှာ  `Living` `Booked` `Available` ဆိုတဲ့ Status 3ခုကို  ပြပေးအောင် ရေးပါမယ်။
+
+	let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+						{
+							targets:3, 		// the order of column 
+							render:function(data,type,row){
+								return  data.length  >  20  ?
+								data.substr(0,17) +  '....'  :  data
+							}
+						},
+						{
+							target: 6,
+							visible: false,
+						},
+						{
+							targets:5,
+							render: function(data,type,row){
+								return  data  ==  false  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:">Booked</a>'
+								:  data  ==  false  &&  row.is_living  ==  true  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-warning" style="background:; color:;"> Living </a>'
+								:  data  ==  true  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-primary" style="background:; color:;"> Available </a>'
+								:  '<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:; color:;"> Wrong Something </a>';
+							}
+						},
+					]
+				});
+			});
+
+အပေါ်က code မှာ data ဆိုတာက target:5 (column no 5, `status` column) ရဲ့ data ဖြစ်ပါတယ်။
+
+`status => false && is_living => false` ဆိုရင်  `Booked` Button
+`status => false && is_living => true`  ဆိုရင်  `Living` Button
+`status => true && is_living => false` ဆိုရင်  `Available` Button 
+ပြပေးမယ်လို့ ternary operator နဲ့ condition စစ်ပြီး render လုပ်ပေးထားတာဖြစ်ပါတယ်။
+
+
+![image](https://github.com/goal-dev-kzw/Laravel9_Doc/blob/main/Screenshot%20(109).png)
+
+ဒီအထိ ရေးပြီးသွားရင် table က အပေါ်ကလိုပြပေးနေမှာပါ။
+
+
+image
+
+အခု action column မှာပဲ button တစ်ခု ထပ်ထည့်ပါမယ်။ နဂိုမူလက action မှာ button 3 ခုရှိပြီးသားပါ။ အခု အောက်ပါပုံအတိုင်း Button 4 ခုဖြစ်အောင် ရေးပါမယ်။
