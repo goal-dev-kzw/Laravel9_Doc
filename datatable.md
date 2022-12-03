@@ -490,4 +490,426 @@ order number 6 column ဖြစ်တဲ့ Living Column ကို `visible:fal
 
 ဒီအထိ ရေးပြီးသွားရင် table က အပေါ်ကလိုပြပေးနေမှာပါ။
 
+___
+
+
+အခု action column မှာပဲ button တစ်ခု ထပ်ထည့်ပါမယ်။ နဂိုမူလက action မှာ button 3 ခုရှိပြီးသားပါ။ အခု အောက်ပါပုံအတိုင်း Button 4 ခုဖြစ်အောင် ရေးပါမယ်။
+အသစ်ထည့်တဲ့ Button က Living နဲ့ Booked Status မှာဆို Check Booking
+Available Status မှာဆို Booking Now ပြပေးမှာပါ။
+
+	let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+						{
+							targets:3, 		// the order of column 
+							render:function(data,type,row){
+								return  data.length  >  20  ?
+								data.substr(0,17) +  '....'  :  data
+							}
+						},
+						{
+							target: 6,
+							visible: false,
+						},
+						{
+							targets:5,
+							render: function(data,type,row){
+								return  data  ==  false  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:">Booked</a>'
+								:  data  ==  false  &&  row.is_living  ==  true  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-warning" style="background:; color:;"> Living </a>'
+								:  data  ==  true  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-primary" style="background:; color:;"> Available </a>'
+								:  '<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:; color:;"> Wrong Something </a>';
+							}
+						},
+						{
+							
+							targets:7, 
+							render: function(data,type,row){
+								let  btn  =  row.status  ==  0  ?
+								`<a href="javascript:void(0)" style="font-family: \'Source Serif Pro\', serif;" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-outline-warning booking py-2 ml-1" ><i class="mdi mdi-account-check mr-2"></i>Check Booking</a>`
+								:
+								`<a href="javascript:void(0)" style="font-family: \'Source Serif Pro\', serif;" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-outline-info booking py-2 ml-1" ><i class="mdi mdi-book-open-pprice-variant mr-2 "></i>Booking Now</a>`
+								return  data+btn;
+							}
+						}
+					]
+				});
+			});
+
+<br>
+
+___
+
+အခု ဆက်ပြီးတော့ room create လုပ်တာရေးကြပါမယ်။ 
+table အပေါ်မှာ Create Button လေးထည့်ပါမယ်။
+
+    <a  class="btn col-md-2 py-2 my-3 btn-primary btn-icon-text"  href="javascript:void(0)"  id="createNewRoom"><i  class="mdi mdi-plus-one btn-icon-prepend mr-1 "></i>Create New</a>
+
+Ajax ကို သုံးပြီး create လုပ်မှာဖြစ်တာကြောင့် create form ကို နောက် page တစ်ခုမှာ သက်သက်မရေးတော့ပါဘူး။ 
+ဒီ page မှာပဲ create button click တဲ့အခါ create form ကို modal box လေးနဲ့ပြပေးအောင်ရေးမှာဖြစ်ပါတယ်။ အဲ့ဒီအတွက် modal box လေးတစ်ခုရေးကြပါမယ်။
+
+
+    {{-- create form modal --}}    
+    <div  class="modal fade"  id="ajaxModel"  aria-hidden="true">    
+	    <div  class="modal-dialog modal-md">	    
+		    <div  class="modal-content">		    
+			    <div  class="modal-header">			    
+				    <h4  class="modal-title"  id="modelHeading"></h4>			    
+			    </div>		    
+			    <div  class="modal-body">
+			    
+				    <form  id="roomForm"  name="roomForm"  class="text-white form-horizontal">				    
+					    @csrf 
+					    <input  type="hidden"  name="room_id"  id="room_id">					    
+					    <div  class="form-group">					    
+						    <label  for="room_no"  class="col-sm-4 control-label">Room Number</label>					    
+						    <div  class="col-sm-12">					    
+							    <input  type="text"  class="form-control text-white"  id="room_no"  name="room_no"  placeholder="Enter Room Number"  value=""  maxlength="50"  required="">					    
+						    </div>					    
+					    </div>
+					    
+					    <div  class="form-group">					    
+						    <label  for="type"  class="col-sm-4 control-label">Room Type</label>					    
+						    <div  class="col-sm-12">					    
+							    <select  class="form-control text-white"  id="type"  name="type">					    
+							    <option  value="Single Room"  selected>Single Room</option>					    
+							    <option  value="Double Room">Double Room</option>					    
+							    <option  value="Family Room">Family Room</option>					    
+							    <option  value="Premium Room">Premium Room</option>					    
+							    <option  value="VIP Room">VIP Room</option>					    
+							    </select>					    
+						    </div>					    
+					    </div>
+					    
+					    <div  class="form-group">					    
+						    <label  for="description"  class="col-sm-4 control-label">Enter Description</label>					    
+						    <div  class="col-sm-12">					    
+							    <textarea  class="form-control text-white"  id="description"  name="description"  rows="5"  placeholder="Description"></textarea>					    
+						    </div>					    
+					    </div>
+					    
+					    <div  class="form-group">					    
+						    <label  for="price"  class="col-sm-4 control-label">Enter Price</label>					    
+						    <div  class="col-sm-12">					    
+							    <input  type="number"  class="form-control text-white"  id="price"  name="price"  placeholder="Enter Price"  value=""  required="">					    
+						    </div>					    
+					    </div>
+			    
+					    <div  class="col-sm-offset-2 col-sm-10">	    
+						    <button  type="submit"  class="btn btn-primary"  id="saveBtn"  value="create">Save changes </button>					    
+					    </div>					    
+				    </form>				    
+			    </div>			    
+		    </div>		    
+	    </div>	    
+    </div>    
+    {{-- create form modal --}}    
+
+အပေါ်က modal လေးကို table ကို အုပ်ထားတဲ့ div tag ရဲ့အောက် @endsection အပေါ်မှာပဲရေးလိုက်ပါ။ room id ပါတဲ့ input field ကို hidden လုပ်ပေးထားတာ သတိပြုပါ။
+
+modal လဲပြီးပြီ buttton လဲရေးပြီးပြီဆိုတော့ button နှိပ်ရင် create from modal ပေါ်လာအောင် javascript (jquery) code ရေးကြပါမယ်။
+
+
+	@pushOnce('js')
+	<script>
+		$(function () {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			/*------------------------------------------
+
+			--------------------------------------------
+
+			Render DataTable
+
+			--------------------------------------------
+
+			--------------------------------------------*/
+			
+			let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+						{
+							targets:3, 		// the order of column 
+							render:function(data,type,row){
+								return  data.length  >  20  ?
+								data.substr(0,17) +  '....'  :  data
+							}
+						},
+						{
+							target: 6,
+							visible: false,
+						},
+						{
+							targets:5,
+							render: function(data,type,row){
+								return  data  ==  false  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:">Booked</a>'
+								:  data  ==  false  &&  row.is_living  ==  true  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-warning" style="background:; color:;"> Living </a>'
+								:  data  ==  true  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-primary" style="background:; color:;"> Available </a>'
+								:  '<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:; color:;"> Wrong Something </a>';
+							}
+						},
+						{
+							
+							targets:7, 
+							render: function(data,type,row){
+								let  btn  =  row.status  ==  0  ?
+								`<a href="javascript:void(0)" style="font-family: \'Source Serif Pro\', serif;" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-outline-warning booking py-2 ml-1" ><i class="mdi mdi-account-check mr-2"></i>Check Booking</a>`
+								:
+								`<a href="javascript:void(0)" style="font-family: \'Source Serif Pro\', serif;" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-outline-info booking py-2 ml-1" ><i class="mdi mdi-book-open-pprice-variant mr-2 "></i>Booking Now</a>`
+								return  data+btn;
+							}
+						}
+					]
+				});
+				
+		/*------------------------------------------
+
+			--------------------------------------------
+
+			Here CRUD Operation Start
+
+			--------------------------------------------
+
+			--------------------------------------------*/
+			
+			$('#createNewRoom').click(function () {
+				$('#saveBtn').val("create-room");
+				$('#room_id').val('');
+				$('#roomForm').trigger("reset");
+				$('#modelHeading').html("Create New room");
+				$('#ajaxModel').modal('show');
+			});
+
+		});
+	</script>
+	@endPushOnce
+
+create button မှာ createNewRoom ဆိုတဲ့ id ပေးထားပါတယ်။ 
+
+အပေါ်က code ရဲ့ meaning က 
+create button ကိုသာ click ခဲ့ရင် modal ကို ပြပေးမယ်။ modal ရဲ့ heading ကို Create New Room လို့ပြပေးမယ်။ create လုပ်တဲ့အခါ မှာ id မလိုတာကြောင့် hidden လုပ်ထားတဲ့ room id input value လေးကို empty string ပေးလိုက်ပါတယ်။
+
+ဒီအဆင့်ထိ ရေးပြီးပြီဆိုရင် button click တဲ့အခါ form ပေါ်လာပါပြီ
+အခု form ထဲက save changes button(submit) ကို နှိပ်တဲ့အခါ  input ထဲက data တွေကို database ထဲမှာသွားသိမ်းအောင် ထပ်ရေးပါမယ်။
+
+	@pushOnce('js')
+	<script>
+		$(function () {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			/*------------------------------------------
+
+			--------------------------------------------
+
+			Render DataTable
+
+			--------------------------------------------
+
+			--------------------------------------------*/
+			
+			let  room_table  =  $('.data-table').DataTable({
+					processing: true,
+					serverSide: true,
+					retrieve: true,
+					ajax: {
+					url: "{{ route('rooms.index') }}",
+					},
+					columns: [
+						{data: 'DT_RowIndex', name: 'DT_RowIndex'},
+						{data: 'room_no', name: 'room_no'},
+						{data: 'type', name: 'type',},
+						{data: 'description', name: 'description',},
+						{data: 'price', name: 'price'},			
+						{data: 'status', name: 'status',},
+						{data: 'is_living', name: 'is_living',},
+						{data: 'action', name: 'action', orderable: false, searchable: false},
+					],
+					columnDefs: [
+						{
+							targets:3, 		// the order of column 
+							render:function(data,type,row){
+								return  data.length  >  20  ?
+								data.substr(0,17) +  '....'  :  data
+							}
+						},
+						{
+							target: 6,
+							visible: false,
+						},
+						{
+							targets:5,
+							render: function(data,type,row){
+								return  data  ==  false  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:">Booked</a>'
+								:  data  ==  false  &&  row.is_living  ==  true  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-warning" style="background:; color:;"> Living </a>'
+								:  data  ==  true  &&  row.is_living  ==  false  ?
+								'<a class="btn py-1 px-3 btn-rounded btn-outline-primary" style="background:; color:;"> Available </a>'
+								:  '<a class="btn py-1 px-3 btn-rounded btn-outline-danger" style="background:; color:;"> Wrong Something </a>';
+							}
+						},
+						{
+							
+							targets:7, 
+							render: function(data,type,row){
+								let  btn  =  row.status  ==  0  ?
+								`<a href="javascript:void(0)" style="font-family: \'Source Serif Pro\', serif;" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-outline-warning booking py-2 ml-1" ><i class="mdi mdi-account-check mr-2"></i>Check Booking</a>`
+								:
+								`<a href="javascript:void(0)" style="font-family: \'Source Serif Pro\', serif;" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-outline-info booking py-2 ml-1" ><i class="mdi mdi-book-open-pprice-variant mr-2 "></i>Booking Now</a>`
+								return  data+btn;
+							}
+						}
+					]
+				});
+				
+				
+		/*------------------------------------------
+
+			--------------------------------------------
+
+			Here CRUD Operation Start
+
+			--------------------------------------------
+
+			--------------------------------------------*/
+			
+			$('#createNewRoom').click(function () {
+				$('#saveBtn').val("create-room");
+				$('#room_id').val('');
+				$('#roomForm').trigger("reset");
+				$('#modelHeading').html("Create New room");
+				$('#ajaxModel').modal('show');
+			});
+			/*------------------------------------------
+
+			Create Room Code
+
+			--------------------------------------------*/
+
+			$('#saveBtn').click(function (e) {	
+				e.preventDefault();
+				$(this).html('Save Changes...');
+				$.ajax({
+					data: $('#roomForm').serialize(),
+					url: "{{ route('rooms.store') }}",
+					type: "POST",
+					dataType: 'json',
+					success: function (data) {				  
+						$('#roomForm').trigger("reset");
+						$('#ajaxModel').modal('hide');
+						room_table.draw();
+					},
+					error: function (data) {
+						console.log('Error:', data);
+						$('#saveBtn').html('Save Changes');
+					}
+				});
+			});
+
+		});
+	</script>
+	@endPushOnce
+
+saveBtn id ရှိတဲ့ submit button ကို click လိုက်တာနဲ့  Room Controller ထဲက store method ကို သွားခေါ်ပေးမှာဖြစ်ပါတယ်။
+
+    url: "{{ route('rooms.store') }}",
+
+
+rooms.store ဆိုတာက RoomController ထဲက store method ကို ခေါ်တဲ့ route name ပဲဖြစ်ပါတယ်။ store method ကို POST method သုံးပြီး form ထဲက data တွေကို ပို့လိုက်ပါတယ်။
+
+
+success ဖြစ်ခဲ့ရင် (data save လုပ်တာအောင်မြင်ခဲ့ရင်) 
+
+    success: function (data) {				  
+    		$('#roomForm').trigger("reset");
+	    	$('#ajaxModel').modal('hide');
+    		room_table.draw();
+    },
+
+modal ကိုhideမယ်
+form ကို reset ပြန်လုပ်မယ်။
+room table ကို draw( ) ပြန်လုပ်မယ်။ draw() ဆိုတာက loading  ပြန်လုပ်မယ်ပြောတာပါ။
+
+
+ဆက်ပြီးတော့ store method ကို RoomController ထဲမှာမရေးရသေးတာဖြစ်တာကြောင့် ရေးရပါမယ်။
+
+
+In RoomController.php
+
+    public  function  store(Request  $request)
+    {
+	    Room::updateOrCreate([	    
+	    '	id' => $request->room_id	    
+	    ],	    
+	    [	    
+		    'room_no' => $request->room_no,    
+		    'type' => $request->type,	    
+		    'description' => $request->description,	    
+		    'price' => $request->price,	    	      	    
+	    ]);
+	    
+	    return  response()->json(['success'=>'Room saved successfully.']);   
+    }
+
+`updateOrCreate()` သုံးထားပါတယ်။
+
+အလုပ်လုပ်ပုံက create လုပ်တဲ့ id က  database ထဲမှာရှိလား စစ်ပါတယ်။ id ရှိပြီးသားဆိုရင် update လုပ်မှာဖြစ်ပြီး id မရှိသေးဘူးဆိုရင် အသစ်ဖန်တီးပေးသွားမှာဖြစ်ပါတယ်။ ပြီးသွားတော့ json response ပြန်ပေးထားပါတယ်။
+
+
+create() နဲ့ insert လုပ်ထားတာကြောင့် mass assignment expression error မတက်အောင် `$fillable` ကို `Room` model ထဲမှာ ကြေညာပေးဖို့လိုပါတယ်။
+
+
+    protected  $fillable  = [
+	    'room_no',
+	    'type',
+	    'description',
+	    'price'
+    ];
+
+
+ဒါဆိို room create လုပ်တာပြီးဆုံးသွားပါပြီ
+
 
